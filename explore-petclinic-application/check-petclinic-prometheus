@@ -1,0 +1,7 @@
+#!/bin/bash
+status=$(curl --write-out '%{http_code}' --silent --output /dev/null http://localhost:8080)
+
+if [ $status -ne 200 ]; then
+    echo "FAIL: Pet Clinic app not running. Please execute ./start.sh from Terminal"
+    exit 1
+fi

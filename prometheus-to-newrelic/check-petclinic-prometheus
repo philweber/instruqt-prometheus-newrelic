@@ -1,0 +1,5 @@
+#!/bin/bash
+if grep "YOUR_LICENSE_KEY" /src/spring-petclinic-microservices/docker/prometheus/prometheus.yml; then
+    echo "FAIL: Replace the YOUR_LICENSE_KEY placeholder in the Prometheus configuration file with the value for your New Relic account. (Did you remember to save your changes to the file?)"
+    exit 1
+fi

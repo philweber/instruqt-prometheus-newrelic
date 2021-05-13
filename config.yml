@@ -1,0 +1,5 @@
+version: "2"
+virtualmachines:
+- name: petclinic-prometheus
+  image: helpful-valve-312610/spring-petclinic-instruqt
+  machine_type: n1-standard-2

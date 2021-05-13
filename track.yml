@@ -1,0 +1,241 @@
+slug: configuring-prometheus-remote-write
+id: 8e0dynavfss9
+type: track
+title: Configuring the Prometheus Remote Write Integration
+teaser: Learn how simple it is to send your Prometheus metric data to New Relic, and
+  visualize it in Grafana
+description: |-
+  The Prometheus remote write integration allows you to forward [telemetry data](https://docs.newrelic.com/docs/telemetry-data-platform/get-started/capabilities/get-know-telemetry-data-platform/) from your existing Prometheus servers to New Relic. Once integrated, you can leverage the full range of options for setup and management, from raw data to queries, dashboards, and more.
+
+  ## Scale your data and get moving quickly
+  With the Prometheus remote write integration, you can:
+
+  - Store and visualize crucial metrics on a single platform
+  - Combine and group data across your entire software stack
+  - Get a fully-connected view of the relationship between data about your software stack and the behaviors and outcomes you’re monitoring
+  - Connect your Grafana dashboards (optional).
+icon: ""
+level: intermediate
+tags:
+- ""
+owner: newrelic
+developers:
+- pweber@newrelic.com
+private: false
+published: true
+challenges:
+- slug: explore-petclinic-application
+  id: xancervcqrwl
+  type: challenge
+  title: Explore the Pet Clinic Sample Application
+  teaser: Click around the Pet Clinic application to generate some metric data
+  assignment: |-
+    To start the Pet Clinic application, click on the _Terminal_ tab and enter the following command: `./start.sh`. Wait about 3 minutes, then click on the _Pet Clinic App_ tab.
+
+    Click around the Pet Clinic application to generate some metric data.
+
+    - Click on _Veterinarians_ to view a list of the doctors in our clinic
+    - Click on _Owners_, then _All_ to browse a list of pet owners
+    - Select an owner to view their information
+    - Try adding or editing an owner or a pet, or adding a visit for a pet
+
+    When you’re done, click the _Check_ button below.
+  notes:
+  - type: text
+    contents: "We are downloading the [Spring Pet Clinic Microservices](https://github.com/spring-petclinic/spring-petclinic-microservices)
+      sample application. This application consists of several services running in
+      Docker containers: \n\n- Discovery Server\n- Config Server\n- Customers, Vets,
+      and Visits Services\n- AngularJS front end\n- Tracing Server (Zipkin)\n- Admin
+      Server (Spring Boot Admin)\n- Prometheus\n- Grafana Dashboards\n\nIt will take
+      a few minutes to set up."
+  - type: text
+    contents: "After the application starts, we will ask you to click around the UI
+      to generate some metric data. Then you will view the metrics in Prometheus and
+      on a Grafana dashboard. \n\nBut when you look for the metrics in your New Relic
+      account, you will see that they are not there. Prometheus and Grafana are completely
+      separate from New Relic."
+  - type: text
+    contents: |-
+      In later challenges, you will configure Prometheus to send its metrics to New Relic. After you do so, you will be able to see Prometheus metric data flowing into your New Relic account. Finally, you will configure Grafana to use New Relic as a data source for a dashboard.
+
+      To proceed, click the green _Start_ button below.
+  tabs:
+  - title: Terminal
+    type: terminal
+    hostname: petclinic-prometheus
+  - title: Pet Clinic App
+    type: service
+    hostname: petclinic-prometheus
+    port: 8080
+  difficulty: basic
+  timelimit: 300
+- slug: explore-prometheus-metrics
+  id: wbvlojkf6ygz
+  type: challenge
+  title: Explore Prometheus Metrics
+  teaser: View metric data in the Prometheus UI
+  assignment: "Now let’s explore data in Prometheus and do some simple graphing.\n\n1.
+    Click where it says _Expression_ (the query bar) and type “petclinic” or “http”\n2.
+    Don’t press Enter or Tab yet. A dropdown list will populate with choices starting
+    with that string\n\nEach of these choices is a _metric_. Choose a metric and click
+    _Execute_. The metric will then appear beneath the query (in Console mode) or
+    charted (in Graph mode). Try switching between modes.\n\nSee the [PromQL documentation](https://prometheus.io/docs/prometheus/latest/querying/basics/)
+    for more information on querying. "
+  tabs:
+  - title: Prometheus
+    type: service
+    hostname: petclinic-prometheus
+    path: /classic/graph
+    port: 9091
+  difficulty: basic
+  timelimit: 180
+- slug: view-metric-data-grafana
+  id: qyk7rjnglvxu
+  type: challenge
+  title: View Metric Data in Grafana
+  teaser: View Prometheus metrics in Grafana
+  assignment: "As you can see, Prometheus’ graphing capabilities are very basic. For
+    more robust charts and dashboards, many Prometheus users use [Grafana](https://grafana.com/grafana/),
+    an open source, multi-platform visualization tool. Let’s take a look at our Prometheus
+    metric data in Grafana. \n\n![Grafana Dashboards menu](https://github.com/philweber/instruqt-prometheus-newrelic/raw/main/screenshots/grafana-dashboards-menu.png)\n\n1.
+    In the left-hand sidebar menu, click the Dashboards icon, then select _Manage_\n2.
+    From the list of dashboards, select the _Spring Petclinic Metrics_ dashboard and
+    view the data\n3. In the left-hand sidebar menu, click the Configuration icon
+    (the gear), then select _Data Sources_\n\nNotice that Grafana has been configured
+    to use Prometheus as a data source."
+  tabs:
+  - title: Grafana
+    type: service
+    hostname: petclinic-prometheus
+    port: 3000
+  difficulty: basic
+  timelimit: 180
+- slug: newrelic-metric-data-1
+  id: fspezpdmtg9w
+  type: challenge
+  title: Look for Metric Data in New Relic
+  teaser: Log into your New Relic account and see if it is receiving metric data from
+    Prometheus
+  assignment: |-
+    Confirm that Prometheus metrics are _not_ currently flowing into your New Relic account:
+
+    1. Click the _Open external window_ button to the left. [New Relic One](https://one.newrelic.com/) will open in a new browser tab
+    2. Log into your New Relic account. (If you don’t have an account, you may create a free one [here](http://nru.to/new))
+    3. From the top menu bar, select _Query your data_
+    4. Make sure your account is selected from the dropdown list of accounts
+    5. Select the _Query builder_ tab, and NRQL mode if necessary
+    6. Execute the following NRQL query: `SELECT * FROM Metric WHERE instrumentation.provider = 'prometheus'`
+
+    The query should return no data. In the next challenge, we will configure Prometheus to send data to New Relic.
+  notes:
+  - type: text
+    contents: "So we have an application consisting of multiple services, which has
+      been instrumented to send metric data to Prometheus. And we have a Grafana dashboard
+      pulling metric data from Prometheus, providing interesting information about
+      our application. \n\nBut how does New Relic fit into all this? At the moment,
+      it doesn’t!"
+  tabs:
+  - title: New Relic One
+    type: external
+    hostname: petclinic-prometheus
+    url: https://one.newrelic.com/
+  difficulty: basic
+  timelimit: 300
+- slug: prometheus-to-newrelic
+  id: aqw22kby5knl
+  type: challenge
+  title: Configure Prometheus to Send Data to New Relic
+  teaser: Configure Prometheus to send data to New Relic
+  assignment: "To get Prometheus to send its metric data to New Relic, follow these
+    steps: \n\n1. Read the documentation in the _Remote Write Instructions_ tab. When
+    you click the _Add Prometheus data_ button, the remote write setup launcher will
+    open in a new browser tab\n\n2. Complete the setup launcher and note your data
+    source name and license key, then return to this page\n\n3. Click on the _Prometheus
+    Configuration File_ tab and select the file name. Uncomment the remote write configuration
+    lines at the bottom of the file by deleting the hash symbol (#) **and space**
+    from the beginning of each line\n\n4. Replace the YOUR_DATA_SOURCE_NAME and YOUR_LICENSE_KEY
+    placeholders with your values from step 2. If you prefer, you may delete the commented
+    lines and copy and paste the lines from the remote write setup launcher\n\n5.
+    Save your changes by clicking the disk icon on the editor tab\n\n6. Finally, click
+    on the _Terminal_ tab and execute the following command to restart Prometheus:
+    `docker restart prometheus-server`"
+  notes:
+  - type: text
+    contents: "Why might you choose to send your Prometheus data to New Relic? \n\n**1.
+      New Relic is a fully-managed Saas platform** \n\nIf you run Prometheus yourself,
+      you are responsible for finding a place to store the data and managing the associated
+      infrastructure. With New Relic, we take care of that for you."
+  - type: text
+    contents: "**2. New Relic is built to scale** \n\nIf your application has a super-busy
+      day (think Black Friday), your self-managed Prometheus infrastructure may not
+      be able to handle the additional load. You end up having to maintain enough
+      capacity to handle your busiest day; the rest of the time it sits unused. New
+      Relic is built to scale dynamically; we can handle your busiest day, but you
+      pay only for what you actually use.\n\nLet’s see how easy it is to send Prometheus
+      data to New Relic."
+  tabs:
+  - title: Remote Write Instructions
+    type: website
+    hostname: petclinic-prometheus
+    url: https://docs.newrelic.com/docs/integrations/prometheus-integrations/install-configure-remote-write/set-your-prometheus-remote-write-integration/
+  - title: Prometheus Configuration File
+    type: code
+    hostname: petclinic-prometheus
+    path: /src/spring-petclinic-microservices/docker/prometheus/prometheus.yml
+  - title: Terminal
+    type: terminal
+    hostname: petclinic-prometheus
+  difficulty: basic
+  timelimit: 240
+- slug: newrelic-metric-data-2
+  id: 2hm18cid0pm5
+  type: challenge
+  title: Confirm That Prometheus is Sending Data to New Relic
+  teaser: Confirm that Prometheus is sending data to New Relic
+  assignment: "If the New Relic query builder is already open in another tab, you
+    may skip to Step 5. Otherwise: \n\n1. Click the _Open external window_ button
+    to the left. [New Relic One](https://one.newrelic.com/) will open in a new browser
+    tab\n2. From the top menu bar, select _Query your data_\n3. Make sure your account
+    is selected from the dropdown list of accounts\n4. Select the _Query builder_
+    tab, and NRQL mode if necessary\n5. Execute the following NRQL query: `SELECT
+    * FROM Metric WHERE instrumentation.provider = 'prometheus'`\n\nThe query should
+    return results. Prometheus is now sending its metric data to New Relic.\n\nIf
+    the query does not return results, here are some things to check in the previous
+    challenge: \n\n- Did you delete both the hash symbol and the extra space from
+    the commented lines?\n- Did you remember to save the file (by clicking the disk
+    icon on the editor tab) after making your changes?"
+  tabs:
+  - title: New Relic One
+    type: external
+    hostname: petclinic-prometheus
+    url: https://one.newrelic.com/
+  difficulty: basic
+  timelimit: 240
+- slug: grafana-newrelic-data-source
+  id: qeafutaa73y2
+  type: challenge
+  title: Configure Grafana to Use New Relic as a Data Source
+  teaser: Add New Relic as a data source for Grafana dashboards
+  assignment: "Now that Prometheus is sending its data to New Relic, you may configure
+    New Relic as a data source for your Grafana dashboards. \n\n1. Follow the instructions
+    in the _Grafana Data Source Instructions_ tab\n2. Click on the _Grafana_ tab to
+    configure the new data source\n3. When you get to Step 4, _Enter the Name you
+    want to use for your new Prometheus data source_, use the name **From New Relic**.
+    The New Relic Grafana dashboard expects a data source with that name\n4. After
+    completing the steps to configure a data source, click on the _Dashboards_ menu
+    in Grafana, and select the _Spring Petclinic Metrics from New Relic_ dashboard\n\nYou
+    should see data on the dashboard, coming from your New Relic data source. \n\nCongratulations!
+    You have successfully configured Prometheus to send data to New Relic, and configured
+    Grafana to consume that data. Take the rest of the day off. :)"
+  tabs:
+  - title: Grafana Data Source Instructions
+    type: website
+    hostname: petclinic-prometheus
+    url: https://docs.newrelic.com/docs/integrations/grafana-integrations/set-configure/configure-new-relic-prometheus-data-source-grafana/
+  - title: Grafana
+    type: service
+    hostname: petclinic-prometheus
+    port: 3000
+  difficulty: basic
+  timelimit: 360
+checksum: "12351388034738049736"
